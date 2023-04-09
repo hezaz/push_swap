@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/09 23:18:21 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/09 23:31:18 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,8 +138,41 @@ void first_sort(t_stack **stack_a, t_stack **stack_b)
 		push(stack_a, stack_b);
 		elements_left--;
 	}
+	second_sort(stack_a, stack_b);
 }
 
+void second_sort(t_stack **stack_a, t_stack **stack_b)
+{
+    int len;
+    int threshold;
+    t_stack *tmp;
+    int rot_count;
+    int elements_left;
+
+    len = ft_stksize(*stack_a);
+    threshold = len / 2;
+    elements_left = len;
+    while (elements_left > 0)
+    {
+        tmp = *stack_a;
+        rot_count = 0;
+        // Find the first element with indice >= threshold and count rotations required
+        while (tmp && tmp->indice <= threshold)
+        {
+            rot_count++;
+            tmp = tmp->next;
+        }
+        // If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
+        if (!tmp)
+            break;
+        // Rotate stack_a until the element with the target indice is at the top
+        while (rot_count-- > 0)
+            rotate(stack_a);
+        // Push the element from stack_a to stack_b
+        push(stack_a, stack_b);
+        elements_left--;
+    }
+}
 
 
 

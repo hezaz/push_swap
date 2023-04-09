@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:47:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/09 21:29:05 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/09 23:31:30 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void		sort_stack(int *stack_a);
 // void		print_instructions();
 void		t_get_indice_final(t_stack stack);
 int			ft_stksize(t_stack *stack);
+void		second_sort(t_stack **stack_a, t_stack **stack_b);
 t_stack		*ft_stknew(int value, int pos);
 void		ft_free_stack(t_stack *stack);
 int			main(int ac, char **av);
