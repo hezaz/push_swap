@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
+/*   Updated: 2023/04/09 22:15:27 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include"pushswap.h"
 
 int	ft_exit(t_stack *stack_a)
@@ -38,28 +50,28 @@ int	ft_pushatoi(const char *str, t_stack *stack_a)
 // No action if there's only one or no elements.
 void swap(t_stack **stack)
 {
-    t_stack *temp;
+	t_stack *temp;
 
-    if (!*stack || !(*stack)->next)
-        return;
-    temp = (*stack)->next;
-    (*stack)->next = temp->next;
-    temp->next = *stack;
-    *stack = temp;
+	if (!*stack || !(*stack)->next)
+		return;
+	temp = (*stack)->next;
+	(*stack)->next = temp->next;
+	temp->next = *stack;
+	*stack = temp;
 }
 
 // Move the top element of the source stack to the top of the destination stack.
 // No action if the source stack is empty.
 void push(t_stack **src, t_stack **dst)
 {
-    t_stack *temp;
+	t_stack *temp;
 
-    if (!*src)
-        return;
-    temp = *src;
-    *src = (*src)->next;
-    temp->next = *dst;
-    *dst = temp;
+	if (!*src)
+		return;
+	temp = *src;
+	*src = (*src)->next;
+	temp->next = *dst;
+	*dst = temp;
 }
 
 // Shift up all elements of the stack by 1 position.
@@ -67,18 +79,18 @@ void push(t_stack **src, t_stack **dst)
 // No action if there's only one or no elements.
 void rotate(t_stack **stack)
 {
-    t_stack *temp;
-    t_stack *last;
+	t_stack *temp;
+	t_stack *last;
 
-    if (!*stack || !(*stack)->next)
-        return;
-    temp = *stack;
-    *stack = (*stack)->next;
-    temp->next = NULL;
-    last = *stack;
-    while (last->next)
-        last = last->next;
-    last->next = temp;
+	if (!*stack || !(*stack)->next)
+		return;
+	temp = *stack;
+	*stack = (*stack)->next;
+	temp->next = NULL;
+	last = *stack;
+	while (last->next)
+		last = last->next;
+	last->next = temp;
 }
 
 // Shift down all elements of the stack by 1 position.
@@ -102,6 +114,26 @@ void reverse_rotate(t_stack **stack)
     last->next = *stack;
     *stack = last;
 }
+
+int	ft_stksize(t_stack *stack)
+{
+	int		i;
+	t_stack	*tmp;
+
+	i = 0;
+	tmp = stack;
+	if (!stack)
+		return (i);
+	if (!(stack -> next))
+		return (++i);
+	while (tmp)
+	{
+		tmp = tmp -> next;
+		i++;
+	}
+	return (i);
+}
+
 
 // Perform sa and sb simultaneously.
 void ss(t_stack **stack_a, t_stack **stack_b)

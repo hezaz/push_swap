@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/09 21:11:15 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/09 23:18:21 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,50 @@ void ft_get_indice_final(t_stack *stack)
 	}
 }
 
+void first_sort(t_stack **stack_a, t_stack **stack_b)
+{
+	int len;
+	int threshold;
+	t_stack *tmp;
+	int rot_count;
+	int elements_left;
+
+	len = ft_stksize(*stack_a);
+	threshold = (2 * len) / 3;
+	elements_left = len;
+	while (elements_left > 0)
+	{
+		tmp = *stack_a;
+		rot_count = 0;
+		// Find the first element with indice >= threshold and count rotations required
+		while (tmp && tmp->indice < threshold)
+		{
+			rot_count++;
+			tmp = tmp->next;
+		}
+		// If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
+		if (!tmp)
+			break;
+		// Rotate stack_a until the element with the target indice is at the top (if not already there)
+		while (rot_count-- > 0)
+			rotate(stack_a);
+		// Push the element from stack_a to stack_b
+		push(stack_a, stack_b);
+		elements_left--;
+	}
+}
+
+
+
+
+
 int main(int ac, char **av)
 {
 	t_stack	*stack_a;
 	t_stack	*stack_b;
+	t_stack	*stack_c;
 
+	stack_b = NULL;
 	stack_a = NULL;
 	if (ac < 2)
 	{
@@ -120,12 +159,22 @@ int main(int ac, char **av)
 	}
 	stack_a = get_stack(av, stack_a);
 	ft_get_indice_final(stack_a);
-	stack_b = stack_a;
-	while (stack_b)
+	first_sort(&stack_a, &stack_b);
+	stack_c = stack_a;
+	printf("\n stack_a :\n");
+	while (stack_c)
 	{
-		printf("\nvalue = %d\npos = %d\nindice = %d\n", stack_b->value, stack_b->pos, stack_b->indice);
-		stack_b = stack_b->next;
+		printf("\nvalue = %d\npos = %d\nindice = %d\n", stack_c->value, stack_c->pos, stack_c->indice);
+		stack_c = stack_c->next;
+	}
+	printf("\n stack_b :\n");
+	stack_c = stack_b;
+	while (stack_c)
+	{
+		printf("\nvalue = %d\npos = %d\nindice = %d\n", stack_c->value, stack_c->pos, stack_c->indice);
+		stack_c = stack_c->next;
 	}
 	ft_free_stack(stack_a);
+	ft_free_stack(stack_b);
 	return (0);
 }
