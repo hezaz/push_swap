@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/08 18:39:40 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/09 20:44:06 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,25 @@ t_stack	*ft_stknew(int value)
 	t_stack	*ret;
 
 	ret = malloc(sizeof(t_stack));
+	if (!ret)
+		return (NULL);
 	(*ret).value = value;
 	ret->next = NULL;
 	return (ret);
 }
 
+void	ft_free_stack(t_stack *stack)
+{
+	t_stack *tmp;
+
+	tmp = stack;
+	while (tmp)
+	{
+		tmp = stack->next;
+		free(stack);
+		stack = tmp;
+	}
+}
 
 void	ft_stkadd_back(t_stack **lst, t_stack *new)
 {
@@ -47,7 +61,7 @@ t_stack	*get_stack(char **av, t_stack *stack_a)
 	int	num;
 
 	i = 1;
-	while (av[i])
+	while (av[i] && *av[i])
 	{
 		num = ft_pushatoi(av[i], stack_a);
 		if (stack_a)
@@ -55,6 +69,11 @@ t_stack	*get_stack(char **av, t_stack *stack_a)
 		if (!stack_a)
 			stack_a = ft_stknew(num);
 		i++;
+	}
+	if ((av[i]) && (stack_a))
+	{
+		ft_free_stack(stack_a);
+		return NULL;
 	}
 	return (stack_a);
 }
@@ -77,7 +96,6 @@ int main(int ac, char **av)
 		printf("\n%d\n", stack_b->value);
 		stack_b = stack_b->next;
 	}
-	free (stack_a);
+	ft_free_stack(stack_a);
 	return (0);
-
 }

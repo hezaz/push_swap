@@ -3,7 +3,7 @@
 int	ft_exit(t_stack *stack_a)
 {
 	if (stack_a)
-		free(stack_a);
+		ft_free_stack(stack_a);
 	exit(-1);
 	return (-1);
 }

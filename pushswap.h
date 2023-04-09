@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:47:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/08 18:31:34 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/09 20:08:01 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_stack
 int			*parse_input(int argc, char **argv);
 void		sort_stack(int *stack_a);
 // void		print_instructions();
+void	    ft_free_stack(t_stack *stack);
 int			main(int ac, char **av);
 void		swap(t_stack **stack);
 void		push(t_stack **src, t_stack **dst);
