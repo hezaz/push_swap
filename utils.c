@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/09 22:15:27 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/10 18:20:44 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	ft_pushatoi(const char *str, t_stack *stack_a)
 	s = 1;
 	i = 0;
 	tmp = 0;
+	if (!str[i])
+		ft_exit(stack_a);
 	while (str && str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == ' '))
 		i++;
 	if ((str[i] == '+' || str[i] == '-') && str && str[i])

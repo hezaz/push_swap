@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/10 18:15:43 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/10 18:19:52 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,45 +107,6 @@ void ft_get_index_final(t_stack *stack_a)
 }
 
 
-//void ft_get_index_final(t_stack *stack)
-//{
-//    int swap;
-//    t_stack *tmp;
-//    t_stack *tmp2;
-//	//int index1;
-//	//int index2;
-//	//int value1;
-//	//int value2;
-//	//int index_swap1;
-//	//int index_swap2;
-//	//int value_swap1;
-//	//int value_swap2;
-
-//    tmp = stack;
-//    while (tmp)
-//    {
-//		tmp2 = tmp->next;
-//		while (tmp2)
-//		{
-//			////////////////////////////////
-//			//index1=tmp->index;
-//			//index2=tmp2->index;
-//			//value1=tmp->value;
-//			//value2=tmp2->value;
-//			////////////////////////////////
-//			if (tmp->value > tmp2->value)
-//			{
-//				swap = tmp->index;
-//				tmp->index = tmp2->index;
-//				tmp2->index = swap;
-//			}
-
-//			tmp2= tmp2->next;
-//		}
-//		tmp = tmp->next;
-//	}
-//    get_index_max_min(stack);
-//}
 
 
 void	get_index_max_min(t_stack *stack)
