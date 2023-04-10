@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/10 03:51:03 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/10 17:52:45 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,39 +81,72 @@ t_stack	*get_stack(char **av, t_stack *stack_a)
 	return (stack_a);
 }
 
-void ft_get_index_final(t_stack *stack)
+void ft_get_index_final(t_stack *stack_a)
 {
-	int swap;
-	t_stack *tmp;
-	t_stack *tmp2;
+    t_stack *current;
+    t_stack *runner;
+    int final_index;
 
-	tmp = stack;
-	//tmp2 = stack->next;
-	while(tmp)
-	{
-		tmp2 = tmp;
-		while(tmp2)
-		{
-			int tmp1_value = tmp->value;
-			int tmp2_value = tmp2->value;
-			int tmp1_index = tmp->index;
-			int tmp2_index = tmp2->index;
-			if ((tmp->value > tmp2->value && tmp->index < tmp2->index)
-				|| (tmp->value < tmp2->value && tmp->index > tmp2->index))
-			{
-				swap = tmp->index;
-				tmp->index = tmp2->index;
-				tmp2->index = swap;
-				int tmp1_index_final= tmp->index;
-				int tmp2_index_final= tmp2->index;
-			}
-
-			tmp2 = tmp2->next;
-		}
-		tmp=tmp->next;
-	}
-	get_index_max_min(stack);
+    current = stack_a;
+    while (current != NULL)
+    {
+        final_index = 1;
+        runner = stack_a;
+        while (runner != NULL)
+        {
+            if (runner->value < current->value)
+            {
+                final_index++;
+            }
+            runner = runner->next;
+        }
+        current->index = final_index;
+        current = current->next;
+    }
+	get_index_max_min(stack_a);
 }
+
+
+//void ft_get_index_final(t_stack *stack)
+//{
+//    int swap;
+//    t_stack *tmp;
+//    t_stack *tmp2;
+//	//int index1;
+//	//int index2;
+//	//int value1;
+//	//int value2;
+//	//int index_swap1;
+//	//int index_swap2;
+//	//int value_swap1;
+//	//int value_swap2;
+
+//    tmp = stack;
+//    while (tmp)
+//    {
+//		tmp2 = tmp->next;
+//		while (tmp2)
+//		{
+//			////////////////////////////////
+//			//index1=tmp->index;
+//			//index2=tmp2->index;
+//			//value1=tmp->value;
+//			//value2=tmp2->value;
+//			////////////////////////////////
+//			if (tmp->value > tmp2->value)
+//			{
+//				swap = tmp->index;
+//				tmp->index = tmp2->index;
+//				tmp2->index = swap;
+//			}
+
+//			tmp2= tmp2->next;
+//		}
+//		tmp = tmp->next;
+//	}
+//    get_index_max_min(stack);
+//}
+
 
 void	get_index_max_min(t_stack *stack)
 {
@@ -143,53 +176,123 @@ void	get_index_max_min(t_stack *stack)
 
 void first_sort(t_stack **stack_a, t_stack **stack_b)
 {
-	int len;
-	int threshold;
-	t_stack *tmp;
-	int rot_count;
-	int elements_left;
+    int len;
+    int threshold;
+    t_stack *tmp;
+    int rot_count;
+    int elements_left;
+
+    len = ft_stksize(*stack_a);
+    threshold = (2 * len) / 3;
+    elements_left = len;
+    while (elements_left > 0)
+    {
+        tmp = *stack_a;
+        rot_count = 0;
+
+        // Find the first element with indice >= threshold and count rotations required
+        while (tmp && tmp->index < threshold)
+        {
+            rot_count++;
+            tmp = tmp->next;
+        }
+
+        // If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
+        if (!tmp)
+            break;
+
+        // Rotate stack_a until the element with the target indice is at the top (if not already there)
+        while (rot_count-- > 0)
+            rotate(stack_a);
+
+        // If the element's index is equal to index_max or index_min, rotate stack_a instead of pushing to stack_b
+        if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
+        {
+            rotate(stack_a);
+        }
+        else
+        {
+            // Push the element from stack_a to stack_b
+            push(stack_a, stack_b);
+        }
+
+        elements_left--;
+    }
+	second_sort(stack_a, stack_b);
+}
+
+
+void second_sort(t_stack **stack_a, t_stack **stack_b)
+{
+    int len;
+    int threshold;
+    t_stack *tmp;
+    int rot_count;
+    int elements_left;
+
+    len = ft_stksize(*stack_a);
+    threshold = len / 2;
+    elements_left = len;
+    while (elements_left > 0)
+    {
+        tmp = *stack_a;
+        rot_count = 0;
+
+        // Find the first element with indice >= threshold and count rotations required
+        while (tmp && tmp->index < threshold)
+        {
+            rot_count++;
+            tmp = tmp->next;
+        }
+
+        // If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
+        if (!tmp)
+            break;
+
+        // Rotate stack_a until the element with the target indice is at the top (if not already there)
+        while (rot_count-- > 0)
+            rotate(stack_a);
+
+        // If the element's index is equal to index_max or index_min, rotate stack_a instead of pushing to stack_b
+        if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
+        {
+            rotate(stack_a);
+        }
+        else
+        {
+            // Push the element from stack_a to stack_b
+            push(stack_a, stack_b);
+        }
+
+        elements_left--;
+    }
+	third_sort(stack_a, stack_b);
+}
+
+void	third_sort(t_stack **stack_a, t_stack **stack_b)
+{
+	int		len;
+	int		elements_left;
 
 	len = ft_stksize(*stack_a);
-	threshold = (2 * len) / 3;
 	elements_left = len;
 	while (elements_left > 0)
 	{
+        if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
+        {
+            rotate(stack_a);
+        }
+        else
+        {
+            // Push the element from stack_a to stack_b
+            push(stack_a, stack_b);
+        }
 
-		tmp = *stack_a;
-		rot_count = 0;
-		if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
-			rotate(stack_a);
-		// Find the first element with indice >= threshold and count rotations required
-		else
-		{
-			while (tmp && tmp->index < threshold )
-			{
-				rot_count++;
-				if (tmp->next->index == tmp->index_max || tmp->next->index == tmp->index_min)
-				{
-					tmp = tmp->next->next;
-					rot_count++;
-				}
-				else
-					tmp = tmp->next;
-			}
-
-			// If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
-			if (!tmp)
-				break;
-			// Rotate stack_a until the element with the target indice is at the top (if not already there)
-			while (rot_count-- > 0)
-				rotate(stack_a);
-			// Push the element from stack_a to stack_b
-			//if (tmp->index != tmp->index_max || tmp->index != tmp->index_min)
-			push(stack_a, stack_b);
-			//else
-			//	rotate(stack_a);
-
-		}
-		elements_left--;
+        elements_left--;
 	}
 }
+
+
 
 
 //void first_sort(t_stack **stack_a, t_stack **stack_b)
