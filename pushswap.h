@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:47:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/09 23:31:30 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/10 01:09:02 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 typedef struct s_stack
 {
     int value;
-	int indice;
+	int index;
+	int index_max;
+	int index_min;
 	int pos;
 	int cost;              // The value of the element.
     struct s_stack *next;   // Pointer to the next element in the stack.
@@ -27,7 +29,9 @@ typedef struct s_stack
 int			*parse_input(int argc, char **argv);
 void		sort_stack(int *stack_a);
 // void		print_instructions();
-void		t_get_indice_final(t_stack stack);
+void		t_get_index_final(t_stack stack);
+void		get_index_max_min(t_stack *stack);
+void		third_sort(t_stack **stack_a, t_stack **stack_b);
 int			ft_stksize(t_stack *stack);
 void		second_sort(t_stack **stack_a, t_stack **stack_b);
 t_stack		*ft_stknew(int value, int pos);
