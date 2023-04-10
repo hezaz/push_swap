@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/10 17:52:45 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/10 18:15:43 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,6 +289,22 @@ void	third_sort(t_stack **stack_a, t_stack **stack_b)
         }
 
         elements_left--;
+	}
+	ft_get_pos(*stack_a);
+	ft_get_pos(*stack_b);
+}
+
+void	ft_get_pos(t_stack *stack)
+{
+	t_stack	*tmp;
+	int		cpt;
+
+	tmp = stack;
+	cpt = 0;
+	while(++cpt && tmp)
+	{
+		tmp->pos = cpt;
+		tmp = tmp->next;
 	}
 }
 
