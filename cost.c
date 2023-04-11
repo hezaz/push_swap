@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:39:57 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 02:05:54 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 03:06:21 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
 
 	}
 
-	find_best_op(stack_a, stack_b, &rota_cpt);
+	//find_best_op(stack_a, stack_b, &rota_cpt);
 }
 
 
@@ -163,7 +163,7 @@ void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota_cpt, int *pos)
 		ft_rotate(stack_a, rota, 'a');
 		ft_rotate(stack_b, rotb, 'b');
 	}
-	push(stack_b, stack_a);
+	ft_push(stack_b, stack_a,'a');
 
 }
 

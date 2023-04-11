@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 02:32:11 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 03:03:57 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,31 @@
 
 int main(int ac, char **av)
 {
-	t_stack	**stack_a;
-	t_stack	**stack_b;
+	t_stack	*stack_a;
+	t_stack	*stack_b;
 	t_stack	*stack_c;
+
 	int i = 0;
 	int j = 0;
 
-	stack_b = NULL;
-	stack_a = NULL;
+
 	if (ac == 1 )
 		return 0;
-
-	*stack_a = get_stack(av, *stack_a, ac);
-	ft_get_index_final(*stack_a);
-	first_sort(stack_a, stack_b);
-	ft_get_cost(stack_a, stack_b);
-	t_stack *tmp_b2 = *stack_b;
+	stack_b = NULL;
+	stack_a = NULL;
+	stack_a = get_stack(av, stack_a, ac);
+	ft_get_index_final(stack_a);
+	first_sort(&stack_a, &stack_b);
+	ft_get_cost(&stack_a, &stack_b);
+	t_stack *tmp_b2 = stack_b;
 	while (tmp_b2)
 	{
-		ft_get_cost(stack_a, stack_b);
+		ft_get_cost(&stack_a, &stack_b);
 		tmp_b2=tmp_b2->next;
 	}
 
 	//get_absolute_cost(stack_a, stack_b);
-	stack_c = *stack_a;
+	stack_c = stack_a;
 	printf("\n\n\n****************************\n");
 	printf("****************************\n");
 	printf("*********STACK_A :**********\n");
@@ -56,7 +57,7 @@ int main(int ac, char **av)
 	printf("*********STACK_B :**********\n");
 	printf("****************************\n");
 	printf("****************************\n\n\n\n\n");
-	stack_c = *stack_b;
+	stack_c = stack_b;
 	while (stack_c && ++j)
 	{
 		printf("\n\n");
@@ -65,8 +66,8 @@ int main(int ac, char **av)
 		printf("****************************\n");
 		stack_c = stack_c->next;
 	}
-	ft_free_stack(*stack_a);
-	ft_free_stack(*stack_b);
+	ft_free_stack(stack_a);
+	ft_free_stack(stack_b);
 
 	int k = 0;
 	int h = -0;

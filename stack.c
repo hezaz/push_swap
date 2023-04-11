@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:34:23 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 02:33:55 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 03:00:53 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,20 @@ t_stack	*ft_stknew(int value, int pos)
 	(*ret).index = pos;
 	(*ret).cost = 0;
 	ret->next = NULL;
+	return (ret);
+}
+
+t_stack	**ft_create_b(void)
+{
+	t_stack	*f;
+	t_stack **ret;
+
+	f = ft_stknew(0,0);
+	if (!f)
+		return NULL;
+	ret = &f;
+	free(f);
+	*ret = NULL;
 	return (ret);
 }
 

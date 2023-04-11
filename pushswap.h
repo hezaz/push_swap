@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:47:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 02:31:50 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 02:47:59 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void		first_sort(t_stack **stack_a, t_stack **stack_b);
 int			ft_stksize(t_stack *stack);
 int			ft_exit(t_stack *stack_a);
 void		second_sort(t_stack **stack_a, t_stack **stack_b);
+t_stack		**ft_create_b(void);
 void		ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota_cpt, int *pos);
 void	 find_best_op(t_stack **stack_a,t_stack **stack_b,int *rota_cpt);
 t_stack		*ft_stknew(int value, int pos);

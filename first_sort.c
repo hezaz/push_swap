@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:31:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 01:24:18 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 02:50:30 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void first_sort(t_stack **stack_a, t_stack **stack_b)
         else
         {
             // Push the element from stack_a to stack_b
-            push(stack_a, stack_b);
+            ft_push(stack_a, stack_b,'b');
         }
 
         elements_left--;
@@ -99,7 +99,7 @@ void second_sort(t_stack **stack_a, t_stack **stack_b)
         else
         {
             // Push the element from stack_a to stack_b
-            push(stack_a, stack_b);
+            ft_push(stack_a, stack_b,'b');
         }
 
         elements_left--;
@@ -124,7 +124,7 @@ void	third_sort(t_stack **stack_a, t_stack **stack_b)
         else
         {
             // Push the element from stack_a to stack_b
-            push(stack_a, stack_b);
+            ft_push(stack_a, stack_b,'b');
         }
 
         elements_left--;
