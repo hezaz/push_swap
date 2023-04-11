@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:39:57 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 05:01:55 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 23:29:45 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ void	ft_get_cost(t_stack **stack_a, t_stack **stack_b)
 {
 	if (!(*stack_b))
 		return;
+	//ft_print_stack(stack_a, stack_b, ft_stksize(*stack_b));
 	get_cost(stack_a);
 	get_cost(stack_b);
-	get_absolute_cost(stack_a, stack_b);
+	int *l = get_absolute_cost(stack_a, stack_b);
+	find_best_op(stack_a, stack_b, l);
 }
 
 void	get_cost(t_stack **stack)
@@ -53,46 +55,53 @@ void	get_cost(t_stack **stack)
 			tmp->cost = tmp->pos - 1;
 		tmp = tmp->next;
 	}
-
 }
 
-void	get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
+int		*get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
 {
 	t_stack *tmp_a;
 	t_stack *tmp_b;
 	int rota_cpt;
 	//int rotb_cpt;
-
+	if (!(*stack_b))
+			return NULL;
 	tmp_a = *stack_a;
 	tmp_b = *stack_b;
 	while (tmp_b)
 	{
 		tmp_a = *stack_a;
 		rota_cpt = 0;
-		while (tmp_a)
+		if (tmp_a->index > tmp_b->index && ft_stklast(&tmp_a)->index < tmp_b->index)
+			rota_cpt = tmp_a->cost;
+		else
 		{
-			if (tmp_b->index < tmp_a->index)
+			while (tmp_a)
 			{
-				rota_cpt = tmp_a->cost;
-				break ;
-			}
-			tmp_a=tmp_a->next;
-		}
-		if (!tmp_a)
-			return ; ///////// LEAKS LEAKS LEAKS LEAKS LEAKS STACK A & B NO FREED have to impkement ft_error with stack a and b and not just stack a
 
-		if (rota_cpt == 0)
-			tmp_b->absolute_cost = tmp_b->cost;
-		else if (tmp_b->cost == 0)
-			tmp_b->absolute_cost = rota_cpt;
-		else if ((rota_cpt < 0 && tmp_b->cost < 0 ) || ( rota_cpt > 0 && tmp_b->cost > 0))
+				if ((tmp_a && tmp_a->next) && tmp_a->index < tmp_b->index
+					&& tmp_a->next->index > tmp_b->index)
+				{
+						rota_cpt = tmp_a->next->cost;
+						tmp_a = tmp_a->next;
+						break ;
+				}
+				tmp_a = tmp_a->next;
+
+			}
+		}
+		if (( rota_cpt >= 0 && tmp_b->cost >= 0))
 		{
-			if (rota_cpt > tmp_b->cost)
-				tmp_b->absolute_cost = rota_cpt - tmp_b->cost;
-			else if (rota_cpt < tmp_b->cost)
-				tmp_b->absolute_cost = tmp_b->cost - rota_cpt;
-			else if (rota_cpt == tmp_b->cost)
+			if (rota_cpt >= tmp_b->cost)
+				tmp_b->absolute_cost = rota_cpt;
+			else
 				tmp_b->absolute_cost = tmp_b->cost;
+		}
+		else if (rota_cpt < 0 && tmp_b->cost < 0)
+		{
+			if (rota_cpt < tmp_b->cost)
+				tmp_b->absolute_cost = (rota_cpt * (-1));
+			else
+				tmp_b->absolute_cost = (tmp_b->cost * (-1));
 		}
 		else
 		{
@@ -104,78 +113,65 @@ void	get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
 		tmp_b=tmp_b->next;
 
 	}
+	return (&tmp_a->cost);
 
-	find_best_op(stack_a, stack_b, &rota_cpt);
 }
 
 
 void find_best_op(t_stack **stack_a,t_stack **stack_b,int *rota_cpt)
 {
 	t_stack		*tmp_b;
-	int			pos;
+	int			rot_b;
 	int			cpr;
 
+	if (!(*stack_b))
+		return;
 	tmp_b = *stack_b;
 	cpr = tmp_b->absolute_cost;
-	pos = 1;
+	rot_b = 0;
 	while (tmp_b)
 	{
 		if (tmp_b->absolute_cost < cpr)
 		{
 			cpr = tmp_b->absolute_cost;
-			pos = tmp_b->pos;
+			rot_b = tmp_b->cost;
 			break ;
 		}
 		tmp_b = tmp_b->next;
 	}
-	ft_printf("\n pos = %d\n cpr = %d\n", pos, cpr);
+	//ft_printf("\n pos = %d\n cpr = %d\n", rot_b, cpr);
 	//if (!stack_a)
 	//	*rota_cpt = ft_atoi("1233");
-	ft_pushwap(stack_a, stack_b, rota_cpt, &pos);
+	ft_pushwap(stack_a, stack_b, rota_cpt, &rot_b);
 
 }
 
-void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota_cpt, int *pos)
+void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota, int *rotb)
 {
-	int rotb;
-	int rota;
+
 	t_stack *tmp_b;
 	//t_stack *tmp_a;
 
 	tmp_b = *stack_b;
-	while (tmp_b && tmp_b->pos != *pos)
-		tmp_b = tmp_b->next;
 	if (!tmp_b)
 		return ; ///////// LEAKS LEAKS LEAKS LEAKS LEAKS STACK A & B NO FREED have to impkement ft_error with stack a and b and not just stack a
-	rotb = tmp_b->cost;
-	rota = *rota_cpt;
-	if (rota == 0)
-		ft_rotate(stack_b, rotb, 'b');
-	else if (rotb == 0)
-		ft_rotate(stack_b, rota, 'a');
-	else if ((rota < 0 && rotb < 0 )||( rota> 0 && rotb > 0))
-	{
-		if (rota > rotb)
-		{
-			ft_rr(stack_a, stack_b, rotb);
-			ft_rotate(stack_a, rota-rotb, 'a');
-		}
 
-		else if (rota < rotb)
-		{
-			ft_rr(stack_a, stack_b, rota);
-			ft_rotate(stack_b, rotb-rota, 'b');
-		}
-		else if (rota == rotb)
-			ft_rr(stack_a, stack_b, rota);
-
-	}
-	else
+	while (*rota != 0 || *rotb != 0)
 	{
-		ft_rotate(stack_a, rota, 'a');
-		ft_rotate(stack_b, rotb, 'b');
+		if ((*rota > 0 && *rotb <= 0) || *rota < 0 && *rotb >= 0)
+			ft_rotate(stack_a, rota, 'a');
+		else if ((rotb < 0 && rota >= 0) || (rotb > 0 && rota <= 0))
+			ft_rotate(stack_b, rotb, 'b');
+		else if ((rota > 0 && rotb > 0 )||(rota < 0 && rotb < 0))
+			ft_rr(stack_a, stack_b, rota, rotb);
+
 	}
 	ft_push(stack_b, stack_a,'a');
+	//get_cost(stack_a);
+	//get_cost(stack_b);
+	//int l = get_absolute_cost(stack_a, stack_b);
+	//find_best_op(stack_a, stack_b, &l);
+	//ft_print_stack(stack_a, stack_b, ft_stksize(*stack_b));
 	ft_get_cost(stack_a, stack_b);
 
 }

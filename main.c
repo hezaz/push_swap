@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 05:04:34 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 23:29:15 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,9 @@ int main(int ac, char **av)
 	//printf("*****************************STACK A & B initial*********************************\n");
 	//ft_print_stack(&stack_a, &stack_b, i);
 	//printf("*****************************STACK A & B initial*********************************\n\n\n");
-	while (stack_b && ++i)
-	{
-		ft_get_cost(&stack_a, &stack_b);
-		//printf("***************************** get_cost numero: %d**********************************\n\n\n", i);
-		//ft_print_stack(&stack_a, &stack_b, i);
-		//printf("*****************************get_cost numero: %d**********************************\n\n\n", i);
-	}
+
+	ft_get_cost(&stack_a, &stack_b);
+
 	//if (stack_b)
 	//{
 	//	ft_get_cost(&stack_a, &stack_b);
@@ -82,7 +78,7 @@ int main(int ac, char **av)
 
 	//get_absolute_cost(stack_a, stack_b);
 	//printf("*****************************STACK A & B final*********************************\n");
-	ft_print_stack(&stack_a, &stack_b, 0);
+	//ft_print_stack(&stack_a, &stack_b, 0);
 	//printf("*****************************STACK A & B final*********************************\n\n\n\n");
 	ft_free_stack(stack_a);
 	ft_free_stack(stack_b);

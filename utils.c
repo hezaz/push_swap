@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 03:34:37 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 23:20:38 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,20 @@ int	ft_exit(t_stack *stack_a)
 	exit(-1);
 	return (-1);
 }
+
+
+t_stack	*ft_stklast(t_stack **stack)
+{
+	t_stack	*lst;
+
+	lst = *stack;
+	if (lst == NULL || !lst)
+		return (0);
+	while (lst -> next)
+		lst = lst->next;
+	return (lst);
+}
+
 
 int	ft_pushatoi(const char *str, t_stack *stack_a)
 {
@@ -107,26 +121,25 @@ void rotate(t_stack **stack)
 	last->next = temp;
 }
 
-void	ft_rotate(t_stack **stack, int i, char c)
+void	ft_rotate(t_stack **stack, int *i, char c)
 {
-	int cpt;
 
-	if (ft_stksize(*stack) == 2 && i != 0)
+
+	if (ft_stksize(*stack) == 2 && *i != 0)
 	{
 		swap(stack);
 		return ;
 	}
-	cpt = 0;
-	if (i < 0)
+	if (*i < 0 && *i && i)
 		return ft_reverse_rotate(stack, i, c);
-	while (cpt < i)
+	while (*i > 0)
 	{
 		rotate(stack);
 		if (c == 'a')
 			ft_printf("ra\n");
 		else if (c == 'b')
 			ft_printf("rb\n");
-		cpt++;
+		(*i)--;
 	}
 }
 
@@ -151,19 +164,16 @@ void reverse_rotate(t_stack **stack)
     last->next = *stack;
     *stack = last;
 }
-void ft_reverse_rotate(t_stack **stack, int i, char c)
+void	ft_reverse_rotate(t_stack **stack, int *i, char c)
 {
-	int cpt;
-
-	cpt = 0;
-	while (cpt > i)
+	while (*i < 0)
 	{
 		reverse_rotate(stack);
 		if (c == 'a')
 			ft_printf("rra\n");
 		else if (c == 'b')
 			ft_printf("rrb\n");
-		cpt--;
+		(*i)++;
 	}
 }
 
@@ -211,26 +221,27 @@ void rrr(t_stack **stack_a, t_stack **stack_b)
 	ft_printf("rrr\n");
 }
 
-void	ft_rr(t_stack **stack_a, t_stack **stack_b, int i)
+void	ft_rr(t_stack **stack_a, t_stack **stack_b, int *i, int *j)
 {
 	int cpt;
 
-	if (i < 0)
+	if (*i < 0 && *j < 0)
 	{
-		cpt = 0;
-		while (cpt > i)
+
+		while (*i < 0  && *j < 0)
 		{
 			rrr(stack_a, stack_b);
-			cpt--;
+			(*i)++;
+			(*j)++;
 		}
 	}
-	else if (i > 0)
+	else if (*i > 0 && *j > 0)
 	{
-		cpt = 0;
-		while (cpt < i)
+		while (*i > 0 && *j > 0)
 		{
 			rr(stack_a, stack_b);
-			cpt++;
+			(*i)--;
+			(*j)--;
 		}
 	}
 }

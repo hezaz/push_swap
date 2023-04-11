@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:34:23 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 03:00:53 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 20:13:32 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,23 @@ t_stack	*ft_stknew(int value, int pos)
 	return (ret);
 }
 
-t_stack	**ft_create_b(void)
+void	check_stkdouble(t_stack **stack)
 {
-	t_stack	*f;
-	t_stack **ret;
+	t_stack	*tmp;
+	t_stack	*cur;
 
-	f = ft_stknew(0,0);
-	if (!f)
-		return NULL;
-	ret = &f;
-	free(f);
-	*ret = NULL;
-	return (ret);
+	tmp = *stack;
+	while (tmp && tmp->next)
+	{
+		cur = tmp->next;
+		while (cur)
+		{
+			if (tmp->value == cur->value)
+				ft_exit(*stack);
+			cur = cur->next;
+		}
+		tmp = tmp->next;
+	}
 }
 
 void	ft_free_stack(t_stack *stack)
@@ -87,6 +92,7 @@ t_stack	*get_stack(char **av, t_stack *stack_a, int ac)
 			stack_a = ft_stknew(num, i);
 		i++;
 	}
+	check_stkdouble(&stack_a);
 	if (i != ac)
 	{
 		ft_free_stack(stack_a);
