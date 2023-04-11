@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:39:57 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 03:06:21 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 05:01:55 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_get_cost(t_stack **stack_a, t_stack **stack_b)
 {
+	if (!(*stack_b))
+		return;
 	get_cost(stack_a);
 	get_cost(stack_b);
 	get_absolute_cost(stack_a, stack_b);
@@ -65,15 +67,20 @@ void	get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
 	tmp_b = *stack_b;
 	while (tmp_b)
 	{
+		tmp_a = *stack_a;
+		rota_cpt = 0;
 		while (tmp_a)
 		{
 			if (tmp_b->index < tmp_a->index)
+			{
+				rota_cpt = tmp_a->cost;
 				break ;
+			}
 			tmp_a=tmp_a->next;
 		}
 		if (!tmp_a)
 			return ; ///////// LEAKS LEAKS LEAKS LEAKS LEAKS STACK A & B NO FREED have to impkement ft_error with stack a and b and not just stack a
-		rota_cpt = tmp_a->cost;
+
 		if (rota_cpt == 0)
 			tmp_b->absolute_cost = tmp_b->cost;
 		else if (tmp_b->cost == 0)
@@ -98,7 +105,7 @@ void	get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
 
 	}
 
-	//find_best_op(stack_a, stack_b, &rota_cpt);
+	find_best_op(stack_a, stack_b, &rota_cpt);
 }
 
 
@@ -110,15 +117,20 @@ void find_best_op(t_stack **stack_a,t_stack **stack_b,int *rota_cpt)
 
 	tmp_b = *stack_b;
 	cpr = tmp_b->absolute_cost;
+	pos = 1;
 	while (tmp_b)
 	{
 		if (tmp_b->absolute_cost < cpr)
 		{
 			cpr = tmp_b->absolute_cost;
 			pos = tmp_b->pos;
+			break ;
 		}
 		tmp_b = tmp_b->next;
 	}
+	ft_printf("\n pos = %d\n cpr = %d\n", pos, cpr);
+	//if (!stack_a)
+	//	*rota_cpt = ft_atoi("1233");
 	ft_pushwap(stack_a, stack_b, rota_cpt, &pos);
 
 }
@@ -164,6 +176,7 @@ void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota_cpt, int *pos)
 		ft_rotate(stack_b, rotb, 'b');
 	}
 	ft_push(stack_b, stack_a,'a');
+	ft_get_cost(stack_a, stack_b);
 
 }
 

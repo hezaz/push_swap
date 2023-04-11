@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 01:47:10 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 03:34:37 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,11 @@ void	ft_rotate(t_stack **stack, int i, char c)
 {
 	int cpt;
 
+	if (ft_stksize(*stack) == 2 && i != 0)
+	{
+		swap(stack);
+		return ;
+	}
 	cpt = 0;
 	if (i < 0)
 		return ft_reverse_rotate(stack, i, c);
