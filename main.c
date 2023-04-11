@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 23:29:15 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/11 23:42:04 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,14 @@ int main(int ac, char **av)
 	//printf("*****************************STACK A & B final*********************************\n");
 	//ft_print_stack(&stack_a, &stack_b, 0);
 	//printf("*****************************STACK A & B final*********************************\n\n\n\n");
-	ft_free_stack(stack_a);
-	ft_free_stack(stack_b);
 
+	while (stack_a->index != stack_a->index_min)
+	{
+		rotate(&stack_a);
+		ft_printf("ra\n");
+	}
+	ft_print_stack(&stack_a, &stack_b, 0);
+		ft_free_stack(stack_a);
+	ft_free_stack(stack_b);
 	return (0);
 }
