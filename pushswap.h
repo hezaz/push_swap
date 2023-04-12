@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:47:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 23:16:58 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/12 00:09:23 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void		ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota_cpt, int *i);
 void	 	find_best_op(t_stack **stack_a,t_stack **stack_b,int *rota_cpt);
 t_stack		*ft_stknew(int value, int pos);
 void		ft_free_stack(t_stack *stack);
-void		ft_get_pos(t_stack **stack);
+void		ft_get_pos(t_stack *stack);
 int			*get_absolute_cost(t_stack **stack_a, t_stack **stack_b);
 void ft_print_stack(t_stack **stack_a,t_stack **stack_b, int i);
 int			main(int ac, char **av);

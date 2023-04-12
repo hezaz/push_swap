@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:35:14 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/10 22:13:16 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/12 00:09:11 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ void	get_index_max_min(t_stack *stack)
 
 
 
-void	ft_get_pos(t_stack **stack)
+void	ft_get_pos(t_stack *stack)
 {
 	t_stack	*tmp;
 	int		cpt;
 
-	tmp = *stack;
+	tmp = stack;
 	cpt = 0;
 	while(++cpt && tmp)
 	{

@@ -6,11 +6,24 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 23:42:04 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/12 17:39:25 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pushswap.h"
+
+int		stk_sorted(t_stack **stack)
+{
+	t_stack	*tmp;
+	tmp = *stack;
+	while (tmp)
+	{
+		if (tmp->index != (tmp->pos - 1))
+			return (0);
+		tmp =tmp->next;
+	}
+	return (1);
+}
 
 void ft_print_stack(t_stack **stack_a,t_stack **stack_b, int i)
 {
@@ -65,29 +78,34 @@ int main(int ac, char **av)
 	ft_get_index_final(stack_a);
 	first_sort(&stack_a, &stack_b);
 	int i = 0;
-	//printf("*****************************STACK A & B initial*********************************\n");
-	//ft_print_stack(&stack_a, &stack_b, i);
-	//printf("*****************************STACK A & B initial*********************************\n\n\n");
+	////printf("*****************************STACK A & B initial*********************************\n");
+	////ft_print_stack(&stack_a, &stack_b, i);
+	////printf("*****************************STACK A & B initial*********************************\n\n\n");
 
-	ft_get_cost(&stack_a, &stack_b);
+	//ft_get_cost(&stack_a, &stack_b);
 
 	//if (stack_b)
 	//{
 	//	ft_get_cost(&stack_a, &stack_b);
 	//}
 
-	//get_absolute_cost(stack_a, stack_b);
-	//printf("*****************************STACK A & B final*********************************\n");
+	//////get_absolute_cost(stack_a, stack_b);
+	//////printf("*****************************STACK A & B final*********************************\n");
+	//////ft_print_stack(&stack_a, &stack_b, 0);
+	//////printf("*****************************STACK A & B final*********************************\n\n\n\n");
+	//ft_get_pos(stack_a);
+	//while (stack_a->index != stack_a->index_min)
+	//{
+	//	rotate(&stack_a);
+	//	ft_printf("ra\n");
+	//}
+	//ft_get_pos(stack_a);
 	//ft_print_stack(&stack_a, &stack_b, 0);
-	//printf("*****************************STACK A & B final*********************************\n\n\n\n");
-
-	while (stack_a->index != stack_a->index_min)
-	{
-		rotate(&stack_a);
-		ft_printf("ra\n");
-	}
-	ft_print_stack(&stack_a, &stack_b, 0);
-		ft_free_stack(stack_a);
+	//if (stk_sorted(&stack_a))
+	//{
+	//	printf("\n\n        YEEEEEEEAAAAAAHHHHHHHHH            \n\n\n");
+	//}
+	ft_free_stack(stack_a);
 	ft_free_stack(stack_b);
 	return (0);
 }

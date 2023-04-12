@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:39:57 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 23:29:45 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/12 00:10:20 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	get_cost(t_stack **stack)
 	//int				limint;
 
 	len = ft_stksize(*stack);
-	ft_get_pos(stack);
+	ft_get_pos(*stack);
 	if (len == 0)
 		return ;
 	else if (len == 1)

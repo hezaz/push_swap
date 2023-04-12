@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:31:43 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 22:11:42 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/12 17:42:14 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,25 @@ void first_sort(t_stack **stack_a, t_stack **stack_b)
 	un = 1;
     len = ft_stksize(*stack_a);
     threshold = ((2 * len) / 3);
-    elements_left = len;
+    elements_left = len ;
     while (elements_left > 0)
     {
         tmp = *stack_a;
         rot_count = 0;
 
         // Find the first element with indice >= threshold and count rotations required
-        while (tmp && tmp->index < threshold )
+        while (tmp && tmp->index <= threshold )
         {
-            rot_count++;
-            tmp = tmp->next;
+			//if (tmp->next->index == tmp->index_max)
+			//{
+			//	rot_count++;
+			//	tmp = tmp->next;
+			//}
+			if (tmp)
+			{
+            	rot_count++;
+            	tmp = tmp->next;
+			}
         }
 
         // If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
@@ -87,6 +95,12 @@ void second_sort(t_stack **stack_a, t_stack **stack_b)
         // Find the first element with indice >= threshold and count rotations required
         while (tmp && tmp->index < threshold)
         {
+			//if (tmp->next->index == tmp->index_max)
+			//{
+			//	rot_count += 2;
+			//	tmp = tmp->next->next;
+			//	continue ;
+			//}
             rot_count++;
             tmp = tmp->next;
         }
@@ -144,8 +158,8 @@ void	third_sort(t_stack **stack_a, t_stack **stack_b)
 
         elements_left--;
 	}
-	ft_get_pos(stack_a);
-	ft_get_pos(stack_b);
+	ft_get_pos(*stack_a);
+	ft_get_pos(*stack_b);
 	ft_mini_sort(stack_a);
 }
 

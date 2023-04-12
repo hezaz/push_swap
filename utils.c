@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/11 23:20:38 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/04/12 17:07:21 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,14 @@ void ft_push(t_stack **src, t_stack **dst, char c)
 {
 	push(src, dst);
 	if (c == 'a')
+	{
 		ft_printf("pa\n");
+		//ft_print_stack(dst, src, 0);
+	}
 	if (c == 'b')
 		ft_printf("pb\n");
+	ft_get_pos(*src);
+	ft_get_pos(*dst);
 }
 
 // Shift up all elements of the stack by 1 position.
@@ -141,6 +146,7 @@ void	ft_rotate(t_stack **stack, int *i, char c)
 			ft_printf("rb\n");
 		(*i)--;
 	}
+	ft_get_pos(*stack);
 }
 
 // Shift down all elements of the stack by 1 position.
@@ -244,4 +250,6 @@ void	ft_rr(t_stack **stack_a, t_stack **stack_b, int *i, int *j)
 			(*j)--;
 		}
 	}
+	ft_get_pos(*stack_a);
+	ft_get_pos(*stack_b);
 }
