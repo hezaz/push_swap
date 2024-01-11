@@ -6,12 +6,14 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 16:37:59 by hedizaz           #+#    #+#             */
-/*   Updated: 2023/04/08 18:08:26 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/12/26 17:25:02 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
+#define BUFFER_SIZE  1
 
 # include <stdio.h>
 # include <unistd.h>

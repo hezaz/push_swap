@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/12 17:07:21 by hzaz             ###   ########.fr       */
+/*   Updated: 2023/12/26 17:26:22 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,8 +229,6 @@ void rrr(t_stack **stack_a, t_stack **stack_b)
 
 void	ft_rr(t_stack **stack_a, t_stack **stack_b, int *i, int *j)
 {
-	int cpt;
-
 	if (*i < 0 && *j < 0)
 	{
 

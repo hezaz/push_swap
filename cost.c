@@ -6,7 +6,7 @@
 /*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 20:39:57 by hzaz              #+#    #+#             */
-/*   Updated: 2023/04/12 00:10:20 by hzaz             ###   ########.fr       */
+/*   Updated: 2024/01/11 00:42:32 by hzaz             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 void	ft_get_cost(t_stack **stack_a, t_stack **stack_b)
 {
+	int	*l;
+
 	if (!(*stack_b))
-		return;
+		return ;
+
 	//ft_print_stack(stack_a, stack_b, ft_stksize(*stack_b));
 	get_cost(stack_a);
 	get_cost(stack_b);
-	int *l = get_absolute_cost(stack_a, stack_b);
+	l = get_absolute_cost(stack_a, stack_b);
 	find_best_op(stack_a, stack_b, l);
 }
 
@@ -27,7 +30,6 @@ void	get_cost(t_stack **stack)
 {
 	t_stack			*tmp;
 	int				len;
-	//int				limint;
 
 	len = ft_stksize(*stack);
 	ft_get_pos(*stack);
@@ -49,7 +51,7 @@ void	get_cost(t_stack **stack)
 	tmp = *stack;
 	while (tmp)
 	{
-		if ((tmp->pos - 1) > len/2)
+		if ((tmp->pos - 1) > len / 2)
 			tmp->cost= tmp->pos - len - 1;
 		else
 			tmp->cost = tmp->pos - 1;
@@ -150,7 +152,7 @@ void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota, int *rotb)
 {
 
 	t_stack *tmp_b;
-	//t_stack *tmp_a;
+	
 
 	tmp_b = *stack_b;
 	if (!tmp_b)
@@ -158,7 +160,7 @@ void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota, int *rotb)
 
 	while (*rota != 0 || *rotb != 0)
 	{
-		if ((*rota > 0 && *rotb <= 0) || *rota < 0 && *rotb >= 0)
+		if ((*rota > 0 && *rotb <= 0) || (*rota < 0 && *rotb >= 0))
 			ft_rotate(stack_a, rota, 'a');
 		else if ((rotb < 0 && rota >= 0) || (rotb > 0 && rota <= 0))
 			ft_rotate(stack_b, rotb, 'b');
