@@ -1,0 +1,998 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cost.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/10 20:39:57 by hzaz              #+#    #+#             */
+/*   Updated: 2024/01/11 00:42:32 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pushswap.h"
+
+void	ft_get_cost(t_stack **stack_a, t_stack **stack_b)
+{
+	int	*l;
+
+	if (!(*stack_b))
+		return ;
+
+	//ft_print_stack(stack_a, stack_b, ft_stksize(*stack_b));
+	get_cost(stack_a);
+	get_cost(stack_b);
+	l = get_absolute_cost(stack_a, stack_b);
+	find_best_op(stack_a, stack_b, l);
+}
+
+void	get_cost(t_stack **stack)
+{
+	t_stack			*tmp;
+	int				len;
+
+	len = ft_stksize(*stack);
+	ft_get_pos(*stack);
+	if (len == 0)
+		return ;
+	else if (len == 1)
+		(*stack)->cost = 0;
+	else if (len == 2)
+	{
+		(*stack)->cost = 0;
+		(*stack)->next->cost = 1;
+	}
+	else if (len == 3)
+	{
+		(*stack)->cost = 0;
+		(*stack)->next->cost = 1;
+		(*stack)->next->next->cost = -1;
+	}
+	tmp = *stack;
+	while (tmp)
+	{
+		if ((tmp->pos - 1) > len / 2)
+			tmp->cost= tmp->pos - len - 1;
+		else
+			tmp->cost = tmp->pos - 1;
+		tmp = tmp->next;
+	}
+}
+
+int		*get_absolute_cost(t_stack **stack_a, t_stack **stack_b)
+{
+	t_stack *tmp_a;
+	t_stack *tmp_b;
+	int rota_cpt;
+	//int rotb_cpt;
+	if (!(*stack_b))
+			return NULL;
+	tmp_a = *stack_a;
+	tmp_b = *stack_b;
+	while (tmp_b)
+	{
+		tmp_a = *stack_a;
+		rota_cpt = 0;
+		if (tmp_a->index > tmp_b->index && ft_stklast(&tmp_a)->index < tmp_b->index)
+			rota_cpt = tmp_a->cost;
+		else
+		{
+			while (tmp_a)
+			{
+
+				if ((tmp_a && tmp_a->next) && tmp_a->index < tmp_b->index
+					&& tmp_a->next->index > tmp_b->index)
+				{
+						rota_cpt = tmp_a->next->cost;
+						tmp_a = tmp_a->next;
+						break ;
+				}
+				tmp_a = tmp_a->next;
+
+			}
+		}
+		if (( rota_cpt >= 0 && tmp_b->cost >= 0))
+		{
+			if (rota_cpt >= tmp_b->cost)
+				tmp_b->absolute_cost = rota_cpt;
+			else
+				tmp_b->absolute_cost = tmp_b->cost;
+		}
+		else if (rota_cpt < 0 && tmp_b->cost < 0)
+		{
+			if (rota_cpt < tmp_b->cost)
+				tmp_b->absolute_cost = (rota_cpt * (-1));
+			else
+				tmp_b->absolute_cost = (tmp_b->cost * (-1));
+		}
+		else
+		{
+			if (rota_cpt < 0)
+				tmp_b->absolute_cost = (rota_cpt * (-1)) + tmp_b->cost;
+			else if (tmp_b->cost < 0)
+				tmp_b->absolute_cost = (tmp_b->cost * (-1)) + rota_cpt;
+		}
+		tmp_b=tmp_b->next;
+
+	}
+	return (&tmp_a->cost);
+
+}
+
+
+void find_best_op(t_stack **stack_a,t_stack **stack_b,int *rota_cpt)
+{
+	t_stack		*tmp_b;
+	int			rot_b;
+	int			cpr;
+
+	if (!(*stack_b))
+		return;
+	tmp_b = *stack_b;
+	cpr = tmp_b->absolute_cost;
+	rot_b = 0;
+	while (tmp_b)
+	{
+		if (tmp_b->absolute_cost < cpr)
+		{
+			cpr = tmp_b->absolute_cost;
+			rot_b = tmp_b->cost;
+			break ;
+		}
+		tmp_b = tmp_b->next;
+	}
+	//ft_printf("\n pos = %d\n cpr = %d\n", rot_b, cpr);
+	//if (!stack_a)
+	//	*rota_cpt = ft_atoi("1233");
+	ft_pushwap(stack_a, stack_b, rota_cpt, &rot_b);
+
+}
+
+void	ft_pushwap(t_stack **stack_a, t_stack **stack_b, int *rota, int *rotb)
+{
+
+	t_stack *tmp_b;
+	
+
+	tmp_b = *stack_b;
+	if (!tmp_b)
+		return ; ///////// LEAKS LEAKS LEAKS LEAKS LEAKS STACK A & B NO FREED have to impkement ft_error with stack a and b and not just stack a
+
+	while (*rota != 0 || *rotb != 0)
+	{
+		if ((*rota > 0 && *rotb <= 0) || (*rota < 0 && *rotb >= 0))
+			ft_rotate(stack_a, rota, 'a');
+		else if ((rotb < 0 && rota >= 0) || (rotb > 0 && rota <= 0))
+			ft_rotate(stack_b, rotb, 'b');
+		else if ((rota > 0 && rotb > 0 )||(rota < 0 && rotb < 0))
+			ft_rr(stack_a, stack_b, rota, rotb);
+
+	}
+	ft_push(stack_b, stack_a,'a');
+	//get_cost(stack_a);
+	//get_cost(stack_b);
+	//int l = get_absolute_cost(stack_a, stack_b);
+	//find_best_op(stack_a, stack_b, &l);
+	//ft_print_stack(stack_a, stack_b, ft_stksize(*stack_b));
+	ft_get_cost(stack_a, stack_b);
+
+}
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   first_sort.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/10 20:31:43 by hzaz              #+#    #+#             */
+/*   Updated: 2024/01/11 04:35:14 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pushswap.h"
+
+void first_sort(t_stack **stack_a, t_stack **stack_b)
+{
+    int len;
+    int threshold;
+    t_stack *tmp;
+    int rot_count;
+    int elements_left;
+	int	un;
+
+	un = 1;
+    len = ft_stksize(*stack_a);
+    threshold = ((2 * len) / 3);
+    elements_left = len ;
+    while (--elements_left >= 0)
+    {
+        tmp = *stack_a;
+        rot_count = 0;
+        // Find the first element with indice >= threshold and count rotations required
+        while (tmp && (tmp->index <= threshold || tmp->index == (*stack_a)->index_max) )
+        {
+
+			if (tmp)
+			{
+            	rot_count++;
+            	tmp = tmp->next;
+			}
+        }
+        // If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
+        if (!tmp)
+            break;
+        // Rotate stack_a until the element with the target indice is at the top (if not already there)
+        while (rot_count-- > 0)
+		{
+			un = 1;
+            ft_rotate(stack_a, &un, 'a');
+		}
+        // If the element's index is equal to index_max or index_min, rotate stack_a instead of pushing to stack_b
+        if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
+        {
+			un = 1;
+            ft_rotate(stack_a, &un, 'a');
+        }
+        else
+        {
+            // Push the element from stack_a to stack_b
+            ft_push(stack_a, stack_b,'b');
+        }
+
+    }
+	second_sort(stack_a, stack_b);
+}
+
+
+void second_sort(t_stack **stack_a, t_stack **stack_b)
+{
+    int len;
+    int threshold;
+    t_stack *tmp;
+    int rot_count;
+    int elements_left;
+	int un;
+
+	un = 1;
+    len = ft_stksize(*stack_a);
+    threshold = len / 2;
+    elements_left = len;
+    while (elements_left > 0)
+    {
+        tmp = *stack_a;
+        rot_count = 0;
+        // Find the first element with indice >= threshold and count rotations required
+        while (tmp && (tmp->index < threshold || tmp->index == (*stack_a)->index_max))
+        {
+
+            rot_count++;
+            tmp = tmp->next;
+        }
+        // If the tmp reaches the end of stack_a, all elements meeting the condition are already in stack_b
+        if (!tmp)
+            break;
+        // Rotate stack_a until the element with the target indice is at the top (if not already there)
+        while (rot_count-- > 0)
+		{
+			un = 1;
+            ft_rotate(stack_a, &un, 'a');
+		}
+
+        // If the element's index is equal to index_max or index_min, rotate stack_a instead of pushing to stack_b
+        if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
+        {
+			un = 1;
+            ft_rotate(stack_a, &un , 'a');
+        }
+        else
+        {
+            // Push the element from stack_a to stack_b
+            ft_push(stack_a, stack_b,'b');
+        }
+        elements_left--;
+    }
+	third_sort(stack_a, stack_b);
+}
+
+int find_insert_position(t_stack **stack_a, int value_b)
+{
+    t_stack *current;
+    int position = 0;
+
+    current = *stack_a;
+    while (current != NULL && current->value < value_b)
+    {
+        position++;
+        current = current->next;
+    }
+    return position;
+}
+
+
+void rotate_to_position(t_stack **stack_a, int position)
+{
+    int size = ft_stksize(*stack_a);
+    int rotate_count = (position <= size / 2) ? position : size - position;
+
+    while (rotate_count > 0)
+    {
+        if (position <= size / 2)
+        {
+            rotate(stack_a);
+            ft_printf("ra\n");
+        }
+        else
+        {
+            reverse_rotate(stack_a);
+            ft_printf("rra\n");
+        }
+        rotate_count--;
+    }
+}
+
+
+void third_sort(t_stack **stack_a, t_stack **stack_b)
+{
+    while (*stack_b != NULL)
+    {
+        int position = find_insert_position(stack_a, (*stack_b)->value);
+        rotate_to_position(stack_a, position);
+        push(stack_b, stack_a);
+        ft_printf("pa\n");
+    }
+    ft_mini_sort(stack_a);
+}
+
+
+
+
+
+void	ft_mini_sort(t_stack **stack_a)
+{
+	int	un = 1;
+	if ((*stack_a) && ((*stack_a)->next ))
+	{
+		if ((*stack_a)->value < (*stack_a)->next->value)
+			ft_rotate(stack_a,&un,'a');
+	}
+}
+
+
+
+
+//void	third_sort(t_stack **stack_a, t_stack **stack_b)
+//{
+//	int		len;
+//	int		elements_left;
+//	int		un;
+
+//	un = 1;
+//	len = ft_stksize(*stack_a);
+//	elements_left = len;
+//	while (elements_left > 0)
+//	{
+//		un = 1;
+//        if ((*stack_a)->index == (*stack_a)->index_max || (*stack_a)->index == (*stack_a)->index_min)
+//        {
+//            ft_rotate(stack_a, &un, 'a');
+//        }
+//        else
+//        {
+//            // Push the element from stack_a to stack_b
+//            ft_push(stack_a, stack_b,'b');
+//        }
+//        elements_left--;
+//	}
+//	ft_get_pos(*stack_a);
+//	ft_get_pos(*stack_b);
+//	ft_mini_sort(stack_a);
+//}/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   index.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/10 20:35:14 by hzaz              #+#    #+#             */
+/*   Updated: 2023/04/12 00:09:11 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pushswap.h"
+
+void ft_get_index_final(t_stack *stack_a)
+{
+	t_stack *current;
+	t_stack *runner;
+	int final_index;
+
+	current = stack_a;
+	while (current != NULL)
+	{
+		final_index = -1;
+		runner = stack_a;
+		while (runner != NULL)
+		{
+			if (runner->value <= current->value)
+			{
+				final_index++;
+			}
+			runner = runner->next;
+		}
+		current->index = final_index;
+		current = current->next;
+	}
+	get_index_max_min(stack_a);
+}
+
+
+void	get_index_max_min(t_stack *stack)
+{
+	t_stack *tmp;
+	int max;
+	int min;
+
+	max = stack->index;
+	min = stack->index;
+	tmp = stack;
+	while (tmp)
+	{
+		if (tmp->index > max)
+			max = tmp->index;
+		if (tmp->index < min)
+			min = tmp->index;
+		tmp = tmp->next;
+	}
+	tmp = stack;
+	while (tmp)
+	{
+		tmp->index_max = max;
+		tmp->index_min = min;
+		tmp = tmp->next;
+	}
+}
+
+
+
+void	ft_get_pos(t_stack *stack)
+{
+	t_stack	*tmp;
+	int		cpt;
+
+	tmp = stack;
+	cpt = 0;
+	while(++cpt && tmp)
+	{
+		tmp->pos = cpt;
+		tmp = tmp->next;
+	}
+}/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/08 17:30:25 by hzaz              #+#    #+#             */
+/*   Updated: 2024/01/11 03:54:21 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pushswap.h"
+
+int		stk_sorted(t_stack **stack)
+{
+	t_stack	*tmp;
+
+	tmp = *stack;
+	while (tmp)
+	{
+		if (tmp->index != (tmp->pos - 1))
+			return (0);
+		tmp =tmp->next;
+	}
+	return (1);
+}
+
+int stk_sorted_and_correctly_indexed(t_stack **stack) {
+    t_stack *tmp;
+    int expected_index = 0; // ou 1, selon la convention de départ de l'indexation
+
+    if (!stack || !*stack) {
+        return 0; // Retourner 0 si la pile est vide ou non initialisée
+    }
+
+    tmp = *stack;
+    while (tmp) {
+        if (tmp->index != expected_index) {
+            return 0; // La pile n'est pas triée ou mal indexée
+        }
+        expected_index++;
+        tmp = tmp->next;
+    }
+    return 1; // La pile est triée et correctement indexée
+}
+
+
+void ft_print_stack(t_stack **stack_a,t_stack **stack_b, int i)
+{
+	t_stack *stack_c;
+	if (i == -1)
+	{
+		return ;
+	}
+
+
+	stack_c = *stack_a;
+
+	printf("*********STACK_A :**********\n");
+
+	while (stack_c)
+	{
+
+		printf("*************stack_a pos: %d,***************\n", stack_c->pos);
+		printf("  value = %d\npos = %d\nindex = %d\nindex_max = %d\nindex_min = %d\ncost = %d\n", stack_c->value, stack_c->pos, stack_c->index, stack_c->index_max, stack_c->index_min, stack_c->cost);
+		printf("****************************\n\n");
+
+		stack_c = stack_c->next;
+	}
+
+	printf("*********STACK_B :**********\n");
+
+	stack_c = *stack_b;
+	while (stack_c)
+	{
+
+		printf("**************stack_b pos: %d**************\n", stack_c->pos);
+		printf("value = %d\npos = %d\nindex = %d\nindex_max = %d\nindex_min = %d\ncost = %d\nabsolute_cose = %d\n", stack_c->value, stack_c->pos, stack_c->index, stack_c->index_max, stack_c->index_min, stack_c->cost, stack_c->absolute_cost);
+		printf("****************************\n");
+
+		stack_c = stack_c->next;
+	}
+}
+
+
+
+
+
+int main(int ac, char **av)
+{
+	t_stack	*stack_a;
+	t_stack	*stack_b;
+
+
+
+	if (ac == 1 )
+		return 0;
+	stack_b = NULL;
+	stack_a = NULL;
+	stack_a = get_stack(av, stack_a, ac);
+	ft_get_index_final(stack_a);
+	first_sort(&stack_a, &stack_b);
+
+	ft_get_cost(&stack_a, &stack_b);
+
+	if (stack_b)
+	{
+		ft_get_cost(&stack_a, &stack_b);
+	}
+
+	get_absolute_cost(&stack_a, &stack_b);
+
+	ft_get_pos(stack_a);
+	while (stack_a->index != stack_a->index_min)
+	{
+		rotate(&stack_a);
+		ft_printf("ra\n");
+	}
+	ft_get_pos(stack_a);
+
+	ft_free_stack(stack_a);
+	ft_free_stack(stack_b);
+	return (0);
+}
+
+
+
+//int main(int ac, char **av)
+//{
+//	t_stack	*stack_a;
+//	t_stack	*stack_b;
+
+
+
+//	if (ac == 1 )
+//		return 0;
+//	stack_b = NULL;
+//	stack_a = NULL;
+//	stack_a = get_stack(av, stack_a, ac);
+//	ft_get_index_final(stack_a);
+//	first_sort(&stack_a, &stack_b);
+//	//ici y'avait des commentaire
+//	//int i = 0;
+//	//printf("*****************************STACK A & B initial*********************************\n");
+//	//ft_print_stack(&stack_a, &stack_b, i);
+//	//printf("*****************************STACK A & B initial*********************************\n\n\n");
+
+//	ft_get_cost(&stack_a, &stack_b);
+
+//	if (stack_b)
+//	{
+//		ft_get_cost(&stack_a, &stack_b);
+//	}
+
+//	get_absolute_cost(&stack_a, &stack_b);
+//	//////printf("*****************************STACK A & B final*********************************\n");
+//	//////ft_print_stack(&stack_a, &stack_b, 0);
+//	//////printf("*****************************STACK A & B final*********************************\n\n\n\n");
+//	ft_get_pos(stack_a);
+//	while (stack_a->index != stack_a->index_min)
+//	{
+//		rotate(&stack_a);
+//		ft_printf("ra\n");
+//	}
+//	ft_get_pos(stack_a);
+//	//ft_print_stack(&stack_a, &stack_b, 0);
+//	//if (stk_sorted_and_correctly_indexed(&stack_a))
+//	//{
+//	//	printf("\n\n        YEEEEEEEAAAAAAHHHHHHHHH            \n\n\n");
+//	//}
+//	//else
+//	//	printf("\n\n        tfou            \n\n\n");
+//	//jusque la
+//	ft_free_stack(stack_a);
+//	ft_free_stack(stack_b);
+//	return (0);
+//}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/10 20:34:23 by hzaz              #+#    #+#             */
+/*   Updated: 2023/04/12 16:24:50 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include"pushswap.h"
+
+t_stack	*ft_stknew(int value, int pos)
+{
+	t_stack	*ret;
+
+	ret = malloc(sizeof(t_stack));
+	if (!ret)
+		return (NULL);
+	(*ret).value = value;
+	(*ret).pos = pos;
+	(*ret).index = pos;
+	(*ret).cost = 0;
+	ret->next = NULL;
+	return (ret);
+}
+
+void	check_stkdouble(t_stack **stack)
+{
+	t_stack	*tmp;
+	t_stack	*cur;
+
+	tmp = *stack;
+	while (tmp && tmp->next)
+	{
+		cur = tmp->next;
+		while (cur)
+		{
+			if (tmp->value == cur->value)
+				ft_exit(*stack);
+			cur = cur->next;
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	ft_free_stack(t_stack *stack)
+{
+	t_stack *tmp;
+
+	tmp = stack;
+	while (tmp)
+	{
+		tmp = stack->next;
+		free(stack);
+		stack = tmp;
+	}
+}
+
+void	ft_stkadd_back(t_stack **lst, t_stack *new)
+{
+	t_stack	*tmp;
+
+	if (!new)
+		return ;
+	tmp = *lst;
+	if (!tmp)
+	{
+		*lst = new;
+		return ;
+	}
+	while (tmp -> next)
+		tmp = tmp -> next;
+	tmp -> next = new;
+	return ;
+}
+
+t_stack	*get_stack(char **av, t_stack *stack_a, int ac)
+{
+	int	i;
+	int	num;
+
+	i = 1;
+	while (av[i] && *av[i])
+	{
+		num = ft_pushatoi(av[i], stack_a);
+		ft_stkadd_back(&stack_a, ft_stknew(num, i));
+		i++;
+	}
+	check_stkdouble(&stack_a);
+	if (i != ac)
+	{
+		ft_free_stack(stack_a);
+		return NULL;
+	}
+	return (stack_a);
+}/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hzaz <hzaz@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/09 21:40:56 by hzaz              #+#    #+#             */
+/*   Updated: 2023/12/26 17:26:22 by hzaz             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include"pushswap.h"
+
+int	ft_exit(t_stack *stack_a)
+{
+	if (stack_a)
+		ft_free_stack(stack_a);
+	ft_printf("Error\n");
+	exit(-1);
+	return (-1);
+}
+
+
+t_stack	*ft_stklast(t_stack **stack)
+{
+	t_stack	*lst;
+
+	lst = *stack;
+	if (lst == NULL || !lst)
+		return (0);
+	while (lst -> next)
+		lst = lst->next;
+	return (lst);
+}
+
+
+int	ft_pushatoi(const char *str, t_stack *stack_a)
+{
+	int			i;
+	int			s;
+	int			res2;
+	long long	tmp;
+
+	res2 = 0;
+	s = 1;
+	i = 0;
+	tmp = 0;
+	if (!str[i])
+		ft_exit(stack_a);
+	while (str && str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == ' '))
+		i++;
+	while ((str[i] == '+' || str[i] == '-') && str && str[i])
+		if (str[i++] == '-')
+			s *= (-1);
+	if (!str[i])
+		ft_exit(stack_a);
+	while (str && str[i] && (str[i] >= '0' && str[i] <= '9'))
+		tmp = (tmp * 10) + (str[i++] - '0');
+	if ((tmp > INT_MAX) || (tmp < INT_MIN)
+		|| (str[i] && !(str[i] >= '0' && str[i] <= '9')))
+		return (ft_exit(stack_a));
+	res2 = (int)tmp;
+	return (res2 * s);
+}
+
+
+// Swap the top two elements of the stack.
+// No action if there's only one or no elements.
+void swap(t_stack **stack)
+{
+	t_stack *temp;
+
+	if (!*stack || !(*stack)->next)
+		return;
+	temp = (*stack)->next;
+	(*stack)->next = temp->next;
+	temp->next = *stack;
+	*stack = temp;
+}
+
+// Move the top element of the source stack to the top of the destination stack.
+// No action if the source stack is empty.
+void push(t_stack **src, t_stack **dst)
+{
+	t_stack *temp;
+
+	if (!*src)
+		return;
+	temp = *src;
+	*src = (*src)->next;
+	temp->next = *dst;
+	*dst = temp;
+}
+
+void ft_push(t_stack **src, t_stack **dst, char c)
+{
+	push(src, dst);
+	if (c == 'a')
+	{
+		ft_printf("pa\n");
+		//ft_print_stack(dst, src, 0);
+	}
+	if (c == 'b')
+		ft_printf("pb\n");
+	ft_get_pos(*src);
+	ft_get_pos(*dst);
+}
+
+// Shift up all elements of the stack by 1 position.
+// The first element becomes the last one.
+// No action if there's only one or no elements.
+void rotate(t_stack **stack)
+{
+	t_stack *temp;
+	t_stack *last;
+
+	if (!*stack || !(*stack)->next)
+		return;
+	temp = *stack;
+	*stack = (*stack)->next;
+	temp->next = NULL;
+	last = *stack;
+	while (last->next)
+		last = last->next;
+	last->next = temp;
+}
+
+void	ft_rotate(t_stack **stack, int *i, char c)
+{
+
+
+	if (ft_stksize(*stack) == 2 && *i != 0)
+	{
+		swap(stack);
+		return ;
+	}
+	if (*i < 0 && *i && i)
+		return ft_reverse_rotate(stack, i, c);
+	while (*i > 0)
+	{
+		rotate(stack);
+		if (c == 'a')
+			ft_printf("ra\n");
+		else if (c == 'b')
+			ft_printf("rb\n");
+		(*i)--;
+	}
+	ft_get_pos(*stack);
+}
+
+// Shift down all elements of the stack by 1 position.
+// The last element becomes the first one.
+// No action if there's only one or no elements.
+void reverse_rotate(t_stack **stack)
+{
+    t_stack *prev;
+    t_stack *last;
+
+    if (!*stack || !(*stack)->next)
+        return;
+    prev = NULL;
+    last = *stack;
+    while (last->next)
+    {
+        prev = last;
+        last = last->next;
+    }
+    prev->next = NULL;
+    last->next = *stack;
+    *stack = last;
+}
+void	ft_reverse_rotate(t_stack **stack, int *i, char c)
+{
+	while (*i < 0)
+	{
+		reverse_rotate(stack);
+		if (c == 'a')
+			ft_printf("rra\n");
+		else if (c == 'b')
+			ft_printf("rrb\n");
+		(*i)++;
+	}
+}
+
+int	ft_stksize(t_stack *stack)
+{
+	int		i;
+	t_stack	*tmp;
+
+	i = 0;
+	tmp = stack;
+	if (!stack)
+		return (i);
+	if (!(stack -> next))
+		return (++i);
+	while (tmp)
+	{
+		tmp = tmp -> next;
+		i++;
+	}
+	return (i);
+}
+
+
+// Perform sa and sb simultaneously.
+void ss(t_stack **stack_a, t_stack **stack_b)
+{
+    swap(stack_a);
+    swap(stack_b);
+	ft_printf("ss\n");
+}
+
+// Perform ra and rb simultaneously.
+void rr(t_stack **stack_a, t_stack **stack_b)
+{
+    rotate(stack_a);
+    rotate(stack_b);
+	ft_printf("rr\n");
+}
+
+// Perform rra and rrb simultaneously.
+void rrr(t_stack **stack_a, t_stack **stack_b)
+{
+    reverse_rotate(stack_a);
+    reverse_rotate(stack_b);
+	ft_printf("rrr\n");
+}
+
+void	ft_rr(t_stack **stack_a, t_stack **stack_b, int *i, int *j)
+{
+	if (*i < 0 && *j < 0)
+	{
+
+		while (*i < 0  && *j < 0)
+		{
+			rrr(stack_a, stack_b);
+			(*i)++;
+			(*j)++;
+		}
+	}
+	else if (*i > 0 && *j > 0)
+	{
+		while (*i > 0 && *j > 0)
+		{
+			rr(stack_a, stack_b);
+			(*i)--;
+			(*j)--;
+		}
+	}
+	ft_get_pos(*stack_a);
+	ft_get_pos(*stack_b);
+}
